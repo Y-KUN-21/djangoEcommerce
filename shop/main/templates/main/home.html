@@ -1,0 +1,93 @@
+{% extends 'main/base.html' %}
+<style type="text/css">
+    body{
+      padding: 56px;
+
+    }
+    .carousel-inner > .item > img {
+    width:640px;
+    height:360px;
+    }
+</style>
+{% block content %} 
+  <!-- Page Content -->
+  <div class="container">
+    <!--
+    <div class="row">
+
+      <div class="col-lg-3">
+
+        <h4 class="my-5">Filter</h4>
+        <div class="list-group">
+          <a href="#" class="list-group-item">Category 1</a>
+          <a href="#" class="list-group-item">Category 2</a>
+          <a href="#" class="list-group-item">Category 3</a>
+        </div>
+      </div>
+      </div>
+       /.col-lg-3 -->
+
+    <section class="text-center m-4">
+        <div class="row wow fadeIn">
+          {% for item in object_list %}
+          <div class="col-lg-4 col-md-6 col-sm-4">
+            <div class="card  m-3">
+              <div class="card-body">
+                  <a href="{{ item.get_absolute_url }}">
+                    <img style="width: 250px; height: 230px;" class="card-img-top" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.uCxynHtzqMij7qLYQgkaQAHaHa%26pid%3DApi&f=1" alt="">
+                  </a>
+              <div class="card-body">
+                <a href="{{ item.get_absolute_url }}" class="grey-text">
+                  <p>{{ item.brand }} </p>
+                </a>
+                <h5>₹ {{ item.price }}</h5>
+                <strong>
+                  <a href="{{ item.get_absolute_url }}" class="dark-grey-text">{{ item.name }}
+                    <span class="badge badge-pill {{ item.get_label_display }}-color">
+                      {{ item.get_condition_display }}</span>
+                  </a><br>
+                  <small>{{ item.description}}</small>
+                </strong>
+              </div>
+                <div class="card-footer">
+                <small class="text-muted">{{ item.datetime }}</small>
+              </div>
+            </div>
+        </div>
+      </div>
+    {% endfor %}
+ </div>
+</section>
+  <!--Section: Products v.3-->
+  <!--Pagination-->
+  {% if is_paginated %}
+      <nav class="d-flex justify-content-center wow fadeIn">
+        <ul class="pagination pg-blue">
+
+          <!--Arrow left-->
+           {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page ={{ page_obj.previous_page_number}}" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+              <span class="sr-only">Previous</span>
+            </a>
+          </li>
+           {% endif %}
+
+          <li class="page-item active">
+            <a class="page-link" href="?page={{ page_obj.number}}">{{ page_obj.number}}
+              <span class="sr-only">(current)</span>
+            </a>
+          {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number}}" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+              <span class="sr-only">Next</span>
+            </a>
+          </li>
+           {% endif %}
+        </ul>
+      </nav>
+      <!--Pagination-->
+{% endif %}
+{% endblock %}
