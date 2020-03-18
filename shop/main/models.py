@@ -34,6 +34,7 @@ class Products(models.Model):
     name = models.CharField(max_length=40)
     brand = models.CharField(max_length=25)
     price = models.PositiveIntegerField()
+    discount = models.IntegerField(null=True, blank=True)
     category = models.CharField(choices=CATEGORIES, max_length=2)
     description = models.TextField(max_length=250, blank=True)
     condition = models.CharField(choices=CONDITION, max_length=1)
@@ -78,6 +79,22 @@ class OrderProduct(models.Model):
     def __str__(self):
         return f"{self.quantity} of {self.item} brought by {self.user}"
 
+    def get_total_amount(self):
+        return int(self.quantity*self.item.price)
+
+    def get_total_discount_amount(self):
+        if self.item.discount:
+            return int(self.quantity*self.item.discount)
+        return 0
+
+    def get_saved_amount(self):
+        return int(self.get_total_amount() - self.get_total_discount_amount())
+
+    def get_final_price(self):
+        if self.item.discount:
+            return self.get_total_discount_amount()
+        return self.get_total_amount()
+
 
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -88,3 +105,21 @@ class Order(models.Model):
 
     def __str__(self):
         return f"{self.user.username}"
+
+    def get_sub_total(self):
+        s_total = 0
+        for order_item in self.item.all():
+            s_total += order_item.get_total_amount()
+        return int(s_total)
+
+    def get_saved_total(self):
+        save_total = 0
+        for order_item in self.item.all():
+            save_total += order_item.get_saved_amount()
+        return int(save_total)
+
+    def get_grand_total(self):
+        g_total = 0
+        for order_item in self.item.all():
+            g_total += order_item.get_final_price()
+        return int(g_total)
