@@ -23,7 +23,7 @@
 <!-- Navigation -->
     <nav class="navbar navbar-expand-lg static-top" style="background-color:#ffffe6;">
        <div class="container">
-      <a class="navbar-brand " href="#">
+      <a class="navbar-brand " href="{% url 'main:home' %}">
         <i class="fab fa-amazon mr-2"></i> Amazonpur 
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,7 +34,7 @@
         <ul class="navbar-nav ml-auto">
            {% if user.is_authenticated %}
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{% url 'main:order-summary' %}">
               <span  class="badge">{{ request.user|cart_count }}</span>
               <i class="fas fa-shopping-cart mr-2"></i>Cart
             </a>
@@ -58,7 +58,7 @@
           <li class="nav-item">
             <a class="nav-link" href="#">
               <i class="far fa-envelope mr-2 ml-3"></i>
-            Contact</a>
+            Contact  {{ request.user }}</a>
           </li>
         </ul>
       </div>

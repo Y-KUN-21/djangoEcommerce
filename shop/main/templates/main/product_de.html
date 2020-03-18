@@ -18,11 +18,15 @@
                 <span class="badge badge-{{ object.get_label_display }}">{{ object.get_condition_display}}</span>
             </div>
             <p class="lead">
+              {% if object.discount %}
               <span class="mr-1">
-                <del>$200</del>
+                <del>₹ {{ object.price }}</del>
+                <span>₹ {{ object.discount }}</span>
               </span>
-              <span>{{ object.price }}</span>
+              {% else %}
+              <span>₹ {{ object.price }}</span>
             </p>
+            {% endif %}
             <div>
               <p class="text-muted">{{ object.brand}} </p>
               <p class="lead font-weight-bold">{{ object.name }}
