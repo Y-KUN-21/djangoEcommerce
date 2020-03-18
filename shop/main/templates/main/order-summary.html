@@ -1,0 +1,83 @@
+{% extends 'main/base.html' %}
+{% block content %} 
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card mt-5">
+                <div class="card-body p-4">
+                    <h5 class="text-center"> <strong> Order Summary </strong> </h5>
+                   <hr class="">
+                    <div class="row pb-5 p-5">
+                        <div class="col-md-6">
+                            <p class="font-weight-bold mb-4">{{ request.user }}</p>
+                            <p class="mb-1">XXX XXXXXX XXXXX XX XXXXX</p>
+                            <p>Acme Inc</p>
+                            <p class="mb-1">Berlin, Germany</p>
+                            <p class="mb-1">6781 45P</p>
+                        </div>
+
+                        <div class="col-md-6 text-right">
+                            <p class="font-weight-bold mb-4">Payment Details</p>
+                            <p class="mb-1"><span class="text-muted">VAT: </span> 1425782</p>
+                            <p class="mb-1"><span class="text-muted">VAT ID: </span> 10253642</p>
+                            <p class="mb-1"><span class="text-muted">Payment Type: </span> Root</p>
+                            <p class="mb-1"><span class="text-muted">Name: </span> John Doe</p>
+                        </div>
+                    </div>
+
+                    <div class="row p-5">
+                        <div class="col-md-12">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="border-0 text-uppercase small font-weight-bold">ID</th>
+                                        <th class="border-0 text-uppercase small font-weight-bold">Item</th>
+                                        <th class="border-0 text-uppercase small font-weight-bold">Description</th>
+                                        <th class="border-0 text-uppercase small font-weight-bold">Quantity</th>
+                                        <th class="border-0 text-uppercase small font-weight-bold">Price/Unit</th>
+                                        <th class="border-0 text-uppercase small font-weight-bold">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order_item in object.item.all %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ order_item.item.name }}</td>
+                                        <td>{{ order_item.item.description }}</td>
+                                        <td>{{ order_item.quantity }}</td>
+                                        <td>₹ {{ order_item.item.price}}</td>
+                                        {% if object_item.item.discount %}
+                                        <td>₹ {{ order_item.get_total_discount_amount }} </td>
+                                        {% else %}
+                                        <td>₹ {{ order_item.get_total_amount }}</td>
+                                        {% endif %}
+                                    </tr>
+                                    {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row-reverse text-dark p-4" style="background-color:#ffffe6">
+                        <div class="py-3 px-5 text-right">
+                            <div class="mb-2">Grand Total</div>
+                            <div class="h4 font-weight-light">₹ {{ object.get_grand_total }} </div>
+                        </div>
+
+                        <div class="py-3 px-5 text-right">
+                            <div class="mb-2">Saved</div>
+                            <div class="h4 font-weight-light">₹ {{ object.get_saved_total }} </div>
+                        </div>
+
+                        <div class="py-3 px-5 text-right">
+                            <div class="mb-2">Sub - Total amount</div>
+                            <div class="h4 font-weight-light"><td>₹ {{ object.get_sub_total }} </td></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="#" class="btn btn-warning p-2 mt-3 mb-5">Proceed to Checkout</a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
