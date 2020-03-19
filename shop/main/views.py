@@ -36,7 +36,7 @@ class DetailProductView(DetailView):
     template_name = "main/product_de.html"
 
 
-class OrderSummary(LoginRequiredMixin,View):
+class OrderSummary(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         try:
             order = Order.objects.get(user=self.request.user, ordered=False)
@@ -64,15 +64,17 @@ def add_to_cart(request, slug):
             order_item.quantity += 1
             order_item.save()
             messages.info(request, "Successfully updated your cart")
+            return redirect('main:order-summary')
         else:
             order.item.add(order_item)
             messages.info(request, "Successfully added this item in your cart")
+            return redirect('main:order-summary')
     else:
         order_date = timezone.now()
         orders = Order.objects.create(user=request.user, ordered_date=order_date)
         orders.item.add(order_item)
         messages.info(request, "Successfully added this item in your cart")
-    return redirect('main:product-detail', slug=slug)
+    return redirect('main:order-summary')
 
 
 @login_required()
@@ -93,6 +95,37 @@ def remove_from_cart(request, slug):
             order.item.remove(order_item)
             messages.warning(request, "This item was removed from your cart")
             return redirect('main:product-detail', slug=slug)
+        else:
+            messages.info(request, "You don't have this item in your cart")
+            return redirect('main:product-detail', slug=slug)
+
+    else:
+        messages.info(request, "Your cart is empty")
+        return redirect('main:product-detail', slug=slug)
+
+
+@login_required()
+def remove_single_item_from_cart(request, slug):
+    item = get_object_or_404(Products, slug=slug)
+    order_qs = Order.objects.filter(
+        user=request.user,
+        ordered=False
+    )
+    if order_qs:
+        order = order_qs[0]
+        if order.item.filter(item__slug=item.slug):
+            order_item = OrderProduct.objects.filter(
+                item=item,
+                user=request.user,
+                ordered=False
+            )[0]
+            if order_item.quantity > 1:
+                order_item.quantity -= 1
+                order_item.save()
+            else:
+                order.item.remove(order_item)
+            messages.warning(request, "Removed one unit for this item")
+            return redirect('main:order-summary')
         else:
             messages.info(request, "You don't have this item in your cart")
             return redirect('main:product-detail', slug=slug)

@@ -3,7 +3,7 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <div class="card mt-5">
+            <div class="card mt-5 mb-5">
                 <div class="card-body p-4">
                     <h5 class="text-center"> <strong> Order Summary </strong> </h5>
                    <hr class="">
@@ -16,13 +16,6 @@
                             <p class="mb-1">6781 45P</p>
                         </div>
 
-                        <div class="col-md-6 text-right">
-                            <p class="font-weight-bold mb-4">Payment Details</p>
-                            <p class="mb-1"><span class="text-muted">VAT: </span> 1425782</p>
-                            <p class="mb-1"><span class="text-muted">VAT ID: </span> 10253642</p>
-                            <p class="mb-1"><span class="text-muted">Payment Type: </span> Root</p>
-                            <p class="mb-1"><span class="text-muted">Name: </span> John Doe</p>
-                        </div>
                     </div>
 
                     <div class="row p-5">
@@ -44,7 +37,17 @@
                                         <td>{{ forloop.counter }}</td>
                                         <td>{{ order_item.item.name }}</td>
                                         <td>{{ order_item.item.description }}</td>
-                                        <td>{{ order_item.quantity }}</td>
+                                        <td>
+                                        <a class="" href="{% url 'main:remove-single-item-from-cart' order_item.item.slug %}">
+                                            <i class="fas fa-minus"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-primary px-3 ml-2">
+                                                {{ order_item.quantity }}       
+                                        </button> 
+                                            <a href="{% url 'main:add-to-cart' order_item.item.slug %}">
+                                                <i class="fas fa-plus ml-2"></i>
+                                            </a>
+                                        </td>
                                         <td>₹ {{ order_item.item.price}}</td>
                                         {% if object_item.item.discount %}
                                         <td>₹ {{ order_item.get_total_discount_amount }} </td>
@@ -52,10 +55,17 @@
                                         <td>₹ {{ order_item.get_total_amount }}</td>
                                         {% endif %}
                                     </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="6" class="text-center p-5"><h2>Your cart is empty.</h2>
+                                        <a href="{% url 'main:home'%}" class="btn btn-outline-primary waves-effect ">Continue Shopping</a>
+                                    </td>
+                                    </td>
                                     {% endfor %}
                             </table>
                         </div>
                     </div>
+                    {% if object.get_sub_total %}
                     <div class="d-flex flex-row-reverse text-dark p-4" style="background-color:#ffffe6">
                         <div class="py-3 px-5 text-right">
                             <div class="mb-2">Grand Total</div>
@@ -74,7 +84,13 @@
                     </div>
                 </div>
             </div>
-            <a href="#" class="btn btn-warning p-2 mt-3 mb-5">Proceed to Checkout</a>
+            
+            <div class="row justify-content-center">
+             <a href="{% url 'main:home'%}" class="btn btn-outline-primary waves-effect p-2 mt-3 mb-5 col-3 ">Continue Shopping</a>
+            <a href="/checkout/" class="btn btn-outline-info waves-effect p-2 mt-3 mb-5 ml-3 col-3">Proceed to Checkout</a>
+            {% else %}
+            </div>
+            {% endif %}
         </div>
     </div>
 
