@@ -1,0 +1,80 @@
+{% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %} 
+<div class="container-fluid">
+  
+<h3 class="my-5 text-center">Checkout</h3>
+  
+  <div class="offset-2 ">
+    
+   <div class="col-12">
+     
+     <div class="card w-75 mb-5 p-1 ">
+      
+      <form method="post">{% csrf_token %}
+        
+        <div class="card-body">
+         
+          <div class="card-content">
+            
+            <div class="md-form mb-3 mt-3">
+              <label class="lead">Address</label><br>
+                {{ form.address}}
+            </div>
+            
+            <div class="md-form mb-3">
+              <label class="lead">Address 2 <small class="text-muted">( Optional )</small></label>
+                {{ form.optional_address}}
+            </div>
+            
+            <div class="md-form mb-1">
+              <label class="lead">country</label>
+                {{ form.country}}
+            </div>
+            
+            <div class="md-form mb-3">
+              <label class="lead">Zipcode</label><br>
+                {{ form.zip }}
+            </div>
+          
+          <div class="md-form mb-3">
+             {{ form.same_billing_address }}
+             <label>Shipping address is the same as my billing address.</label><br>
+              {{ form.save_info }}
+              <label>Save this information for next time.</label> 
+          </div>        
+          <div>
+            <label class="lead" >Payment method</label>
+            {% for value,name in form.fields.payment_method.choices %}
+            <div class="custom-control custom-radio ml-3">
+             <input type="radio" id="{{ name }}" name="payment_method" value="{{ value  }}" class="custom-control-input">
+             <label class="custom-control-label" for="{{ name }}">{{ name }}</label>
+            </div>
+            {% endfor %}
+        </div>
+
+      </div>
+      
+      </div>
+
+      <div class="row justify-content-center">
+        <button type="submit" class="btn btn-outline-primary waves-effect p-2 my-3 col-11 ">Proceed to checkout
+        </button>
+      </div>
+      
+    </div>
+    
+  </form>
+
+</div>
+
+</div>
+
+</div>
+
+
+{% endblock %}
+<!--  <div class="row justify-content-center">
+   <a href="{% url 'main:home'%}" class="btn btn-outline-primary waves-effect p-2 mt-3 mb-5 col-3 ">Checkout
+    </a>
+</div> --> 

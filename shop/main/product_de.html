@@ -1,0 +1,118 @@
+{% extends 'main/base.html' %}
+{% block content %}
+  <!--Main layout-->
+  <main class="">
+    <div class="container dark-grey-text mt-5">
+      <!--Grid row-->
+      <div class="row wow fadeIn">
+        <!--Grid column-->
+        <div class="col-md-6 mb-4">
+          <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.uCxynHtzqMij7qLYQgkaQAHaHa%26pid%3DApi&f=1" class="img-fluid" alt="" style="width: 350px">
+        </div>
+        <!--Grid column-->
+        <!--Grid column-->
+        <div class="col-md-6 mb-4">
+          <div class="p-4">
+            <div class="mb-3">
+                <span class="badge purple mr-1">{{ object.get_category_display }}</span>
+                <span class="badge badge-{{ object.get_label_display }}">{{ object.get_condition_display}}</span>
+            </div>
+            <p class="lead">
+              {% if object.discount %}
+              <span class="mr-1">
+                <del>₹ {{ object.price }}</del>
+                <span>₹ {{ object.discount }}</span>
+              </span>
+              {% else %}
+              <span>₹ {{ object.price }}</span>
+            </p>
+            {% endif %}
+            <div>
+              <p class="text-muted">{{ object.brand}} </p>
+              <p class="lead font-weight-bold">{{ object.name }}
+                
+              </p>
+            </div>
+            
+            <p class="text-muted">{{ object.description }}</p>
+
+            <div class="d-flex justify-content-left">
+              <!-- Default input -->
+              <a href="{{ object.get_add_to_cart_url }}" class="btn btn-primary btn-md my-0 p">Add to cart
+                <i class="fas fa-shopping-cart ml-1"></i>
+              </a> 
+               <a href="{{ object.get_remove_from_cart_url }}" class="btn btn-danger btn-md ml-2 p">Remove
+                <i class="fas fa-shopping-cart ml-1"></i>
+              </a> 
+            </div>
+
+          </div>
+          <!--Content-->
+         
+            <div class="ml-4">
+               <strong>Sold by: Vision star</strong><br>
+               <small class="text-muted">visionstar@gamil.com</small>
+            </div>
+        </div>
+        <!--Grid column-->
+
+      </div>
+      <!--Grid row-->
+
+      <hr>
+
+      <!--Grid row-->
+      <div class="row d-flex justify-content-center wow fadeIn">
+
+        <!--Grid column-->
+        <div class="col-md-6 text-center">
+
+          <h4 class="my-4 h4">Additional information</h4>
+
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus suscipit modi sapiente illo soluta odit
+            voluptates,
+            quibusdam officia. Neque quibusdam quas a quis porro? Molestias illo neque eum in laborum.</p>
+
+        </div>
+        <!--Grid column-->
+
+      </div>
+      <!--Grid row-->
+
+      <!--Grid row-->
+      <div class="row wow fadeIn">
+
+        <!--Grid column-->
+        <div class="col-lg-4 col-md-12 mb-4">
+
+          <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/11.jpg" class="img-fluid" alt="">
+
+        </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-lg-4 col-md-6 mb-4">
+
+          <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/12.jpg" class="img-fluid" alt="">
+
+        </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-lg-4 col-md-6 mb-4">
+
+          <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/13.jpg" class="img-fluid" alt="">
+
+        </div>
+        <!--Grid column-->
+
+      </div>
+      <!--Grid row-->
+
+    </div>
+  </main>
+  <!--Main layout-->
+
+  {% endblock %}
+
+</html>
