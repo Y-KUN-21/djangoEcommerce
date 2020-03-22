@@ -1,0 +1,64 @@
+{% extends 'main/base.html'%}
+{% block content %} 
+<!-- Default form register -->
+<p class="h4 text-center my-4">Checkout</p>
+<div class="row justify-content-center">
+<form class="text-left border border-light p-5" method="POST">
+    {% csrf_token %}
+    <div class="form-row mb-3">
+        <div class="col">
+            <!-- First name -->
+            {{ form.first_name }}
+        </div>
+        <div class="col md-form mb-3">
+            <!-- Last name -->
+            {{ form.last_name }}
+        </div>
+    </div>
+    <!-- E-mail -->
+    <div class="md-form mb-3">
+        {{ form.email }}
+    </div>
+    <div>
+        {{ form.address}}
+    </div>
+    <div class="mt-4">
+       {{ form.optional_address}}
+        <small id="defaultRegisterFormPasswordHelpBlock" class="form-text text-muted mb-4">
+            optional
+        </small>
+    </div>
+    <!-- Phone number -->
+    <div class="md-form mb-4">
+        {{ form.phone_no}}
+    </div>
+    <div class="form-row mb-3">
+        <div class="col">
+            <!-- First name -->
+            {{ form.country}}
+        </div>
+        <div class="col">
+            {{ form.zip }}
+        </div>
+    </div>
+    <div class="mb-3">
+        {{ form.same_billing_address }}
+        <label>Shipping address is the same as my billing address.</label><br>
+          {{ form.save_info }}
+        <label>Save this information for next time.</label> 
+    </div>        
+    <div>
+        <label class="" >Payment method</label>
+        {% for value,name in form.fields.payment_method.choices %}
+        <div class="custom-control custom-radio ml-3">
+            <input type="radio" id="{{ name }}" name="payment_method" value="{{ value  }}" class="custom-control-input">
+            <label class="custom-control-label" for="{{ name }}">{{ name }}</label>
+        </div>
+        {% endfor %}
+    </div>
+    <button class="btn btn-info my-4 btn-block" type="submit">PROCEED TO CHECKOUT</button>
+
+</form>
+</div>
+<!-- Default form register -->
+{% endblock %}

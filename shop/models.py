@@ -128,8 +128,12 @@ class Order(models.Model):
 
 class BillingAdd(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=50,default='someone')
+    last_name = models.CharField(max_length=50, blank=True)
+    email = models.EmailField(default='some email')
+    phone_no = models.IntegerField(default='123456789')
     address = models.CharField(max_length=100)
-    optional_address = models.CharField(max_length=100)
+    optional_address = models.CharField(max_length=100, null=True, blank=True)
     country = CountryField(multiple=False)
     zip = models.CharField(max_length=10)
     payment_method = models.CharField(max_length=100)

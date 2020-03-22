@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
-from .models import Products, Order, OrderProduct
+from .models import Products, Order, OrderProduct, BillingAdd
 from django.views.generic import ListView, DetailView, View
 from django.utils import timezone
 from django.contrib import messages
@@ -32,12 +32,45 @@ class CheckoutView(View):
 
     def post(self, *args, **kwargs):
         form = CheckoutForm(self.request.POST or None)
-        print(self.request.POST)
-        if form.is_valid():
-            print(form.cleaned_data)
-            print("This form is valid")
+        try:
+            order = Order.objects.get(user=self.request.user, ordered=False)
+            if form.is_valid():
+                first_name = form.cleaned_data.get('first_name')
+                last_name = form.cleaned_data.get('last_name')
+                email = form.cleaned_data.get('email')
+                phone_no = form.cleaned_data.get('phone_no')
+                address = form.cleaned_data.get('address')
+                optional_address = form.cleaned_data.get('optional_address')
+                country = form.cleaned_data.get('country')
+                zip = form.cleaned_data.get('zip')
+
+                # same_billing_address = form.cleaned_data.get('same_billing_address')
+                # save_info = form.cleaned_data.get('save_info')
+
+                payment_method = form.cleaned_data.get('payment_method')
+                print(form.cleaned_data)
+                billing_address = BillingAdd(
+                    user=self.request.user,
+                    first_name=first_name,
+                    last_name=last_name,
+                    email=email,
+                    phone_no=phone_no,
+                    address=address,
+                    optional_address=optional_address,
+                    country=country,
+                    zip=zip,
+                    payment_method=payment_method
+                )
+                billing_address.save()
+                order.billing_address = billing_address
+                order.save()
+                return redirect('main:checkout')
+            messages.warning(self.request, "Failed checkout, Please fill all the fields and Select any payment options.")
             return redirect('main:checkout')
-        return redirect('main:checkout')
+
+        except ObjectDoesNotExist:
+            messages.error(self.request, "You don't have any active order")
+            return redirect('main:order-summary')
 
 
 class HomeView(ListView):
