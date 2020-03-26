@@ -1,5 +1,5 @@
 from django.db import models
-import random, string
+from django_countries.fields import CountryField
 from django.conf import settings
 from django.shortcuts import reverse
 from django.db.models.signals import pre_save
@@ -80,11 +80,11 @@ class OrderProduct(models.Model):
         return f"{self.quantity} of {self.item} brought by {self.user}"
 
     def get_total_amount(self):
-        return int(self.quantity*self.item.price)
+        return int(self.quantity * self.item.price)
 
     def get_total_discount_amount(self):
         if self.item.discount:
-            return int(self.quantity*self.item.discount)
+            return int(self.quantity * self.item.discount)
         return 0
 
     def get_saved_amount(self):
@@ -102,6 +102,7 @@ class Order(models.Model):
     start_date = models.DateTimeField(auto_now_add=True)
     ordered_date = models.DateTimeField()
     ordered = models.BooleanField(default=False)
+    billing_address = models.ForeignKey('BillingAdd', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username}"
@@ -123,3 +124,19 @@ class Order(models.Model):
         for order_item in self.item.all():
             g_total += order_item.get_final_price()
         return int(g_total)
+
+
+class BillingAdd(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=50,default='someone')
+    last_name = models.CharField(max_length=50, blank=True)
+    email = models.EmailField(default='some email')
+    phone_no = models.IntegerField(default='123456789')
+    address = models.CharField(max_length=100)
+    optional_address = models.CharField(max_length=100, null=True, blank=True)
+    country = CountryField(multiple=False)
+    zip = models.CharField(max_length=10)
+    payment_method = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.user.username
