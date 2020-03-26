@@ -5,8 +5,13 @@ from django.utils import timezone
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import CheckoutForm
+from Naked import settings
+from paytm import checksum
+
+MERCHANT_KEY = 'Your-Merchant-Key-Here'
 
 
 # Create your views here.
@@ -64,13 +69,34 @@ class CheckoutView(View):
                 billing_address.save()
                 order.billing_address = billing_address
                 order.save()
-                return redirect('main:checkout')
+                if payment_method == 'PTM':
+                    data_dict = {
+                        'MID': 'Your Merchant ID',
+                        'ORDER_ID': str(order.id),
+                        'TXN_AMOUNT': str('100'),
+                        'CUST_ID': email,
+                        'INDUSTRY_TYPE_ID': 'Retail',
+                        'WEBSITE': 'WEBSTAGING',
+                        'CHANNEL_ID': 'WEB',
+                        'CALLBACK_URL': 'http://127.0.0.1:8000/main/paytm_handler/',
+                    }
+                    param_dict = data_dict
+                    param_dict['CHECKSUMHASH'] = checksum.generate_checksum(param_dict, MERCHANT_KEY)
+                    return render(self.request, 'main/paytm.html', {'param_dict': param_dict})
+                else:
+                    pass
             messages.warning(self.request, "Failed checkout, Please fill all the fields and Select any payment options.")
             return redirect('main:checkout')
 
         except ObjectDoesNotExist:
             messages.error(self.request, "You don't have any active order")
             return redirect('main:order-summary')
+
+
+@csrf_exempt
+def payment_handler(request):
+    return HttpResponse ('worked')
+    pass
 
 
 class HomeView(ListView):
@@ -181,3 +207,4 @@ def remove_single_item_from_cart(request, slug):
     else:
         messages.info(request, "Your cart is empty")
         return redirect('main:product-detail', slug=slug)
+
