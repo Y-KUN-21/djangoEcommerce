@@ -95,8 +95,20 @@ class CheckoutView(View):
 
 @csrf_exempt
 def payment_handler(request):
-    return HttpResponse ('worked')
-    pass
+    form = request.POST
+    response_dict = {}
+    for i in form.keys():
+        response_dict[i] = form[i]
+        if i == 'CHECKSUMHASH':
+            checksum = form[i]
+
+    verify = Checksum.verify_checksum(response_dict, MERCHANT_KEY, checksum)
+    if verify:
+        if response_dict['RESPCODE'] == '01':
+            print('order successful')
+        else:
+            print('order was not successful because' + response_dict['RESPMSG'])
+    return render(request, 'main/paytmstatus.html', {'response': response_dict})
 
 
 class HomeView(ListView):
